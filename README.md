@@ -299,11 +299,11 @@ Navigate to **Deployments > App**. Enter the title *YourName Loan Officer Dashbo
 
 Once active (1–3 minutes), click **View App**. You'll see:
 
-- A loan application form on the left with inputs for all key features
-- Four metric cards showing probability, risk score, risk tier, and recommendation
+- A **sidebar** containing the full loan application form — all inputs for loan details, applicant profile, and credit history
+- Four metric cards across the top showing probability, risk score, risk tier, and recommendation
 - A gauge chart visualising the default probability with green/amber/red bands
-- A SHAP waterfall chart showing the top 5 decision drivers — red bars increase default risk, green bars decrease it
-- A raw JSON response panel at the bottom
+- A SHAP waterfall chart showing the top decision drivers — red bars increase default risk, green bars decrease it
+- A **Raw API Response** expander at the bottom for inspecting the full JSON payload
 
 Enter some test applications and observe how the SHAP chart changes as you adjust features like `dti`, `grade`, and `annual_inc`.
 
@@ -515,11 +515,11 @@ Discuss with your instructor:
 
 The loan officer dashboard (`app/app.py`) is designed to accept the SHAP values returned by `predict.py`. The agent in `loan_explainer_agent.py` can be called directly from the app to add a natural-language explanation panel beneath the SHAP waterfall chart.
 
-As a stretch exercise, modify `app/app.py` to add:
+As a stretch exercise, modify `scripts/app.py` to add:
 
-1. A **"Explain Decision"** button below the SHAP chart
-2. A callback that calls `explain_loan_decision()` with the current loan inputs
-3. A text panel that renders the agent's explanation using `dcc.Markdown`
+1. An **"Explain Decision"** button below the SHAP chart
+2. A call to `explain_loan_decision()` with the current loan inputs (triggered via `st.button`)
+3. A text panel that renders the agent's explanation using `st.markdown`
 
 This wires together the full stack: ML model → SHAP explainability → LLM explanation → loan officer UI.
 
@@ -549,7 +549,9 @@ domino-training-lending/
 │   ├── evaluate.py                    # Model selection & AUC gate
 │   ├── promote.py                     # Endpoint promotion via Domino API
 │   ├── alert.py                       # Alert & hold on gate failure
-│   └── monitoring_baseline.py         # Baseline stats & drift simulation
+│   ├── monitoring_baseline.py         # Baseline stats & drift simulation
+│   ├── app.py                         # Streamlit loan officer dashboard
+│   └── app.sh                         # App launch script
 ├── models/                            # Serialised model artifacts
 ├── monitoring/
 │   ├── baseline_stats.json            # Generated baseline statistics
@@ -559,12 +561,10 @@ domino-training-lending/
 ├── genai/
 │   ├── loan_explainer_agent.py        # Agentic LLM decision explainer
 │   └── policy_docs/                   # Lending policy documents for RAG
-├── app/
-│   ├── app.py                         # Dash loan officer dashboard
-│   └── app.sh                         # App launch script
 ├── results/                           # Job outputs and charts
-├── README.md
-└── README_project.md
+├── Dockerfile                         # Domino Compute Environment definition
+├── requirements.txt                   # Python dependencies
+└── README.md
 ```
 
 ---
